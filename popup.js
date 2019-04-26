@@ -1,12 +1,20 @@
-import Qty from './node_modules/js-quantities/src/quantities.js'
 
-//var qty = new Qty('23 ft');
- 
+console.log("yooooo");
 
-console.log("yooooo")
-chrome.storage.sync.get('value', function(unitValue) {
-	console.log(unitValue);
+chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
+    var url = tabs[0].url;
+    console.log(url)
 
+   	//split string 
+	var split1 = url.split("://");
+	console.log(split1); 
+
+	var parsed_url = split1[1].split("/");
+	console.log(parsed_url);
+});
+
+
+	/*
 	//split string 
 	var split = unitValue.value.split(" ");
 	console.log(split);
@@ -83,30 +91,8 @@ chrome.storage.sync.get('value', function(unitValue) {
 			}
 		}
 	}
-	
-
-
-	// console.log(qty.numerator);
-	// console.log(qty.toString());
-	// console.log(Qty.parse(unitValue.value));
-
-	// //console.log(qty.kind());
-	// console.log(Qty.getUnits('length'));
-	// console.log(Qty.parse("1 m"));
-	// console.log(Qty.parse("1 m/s"));
-	// //console.log(qty.to('ft'));
-	// //console.log(Qty.getUnits('length'));
-
-	// var unitTag = document.createElement('h2');
-	// var unitText = document.createTextNode(unitValue.value);
-	// unitTag.appendChild(unitText);
-	// document.body.appendChild(unitTag);
+	*/
 });
 
-// .kind -> length, pressure etc
-// length: meter, feet, mile, inch, yard, mm, cm, km, yard
-// come up w order for each kind of unit
-// most likely one displayed biggest, followed by 5 more smaller
-// dropdown for niche conversions
 
 

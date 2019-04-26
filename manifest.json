@@ -1,7 +1,7 @@
   {
-    "name": "Unit Converter",
+    "name": "TRF Social Credit System",
     "version": "1.0",
-    "description": "Highlight a unit and see conversions",
+    "description": "Tracks your web behavior and assigns a score. Inspired by Chinese Social Credit System",
     "content_scripts": [
       {
         "matches": ["<all_urls>"],
@@ -18,6 +18,7 @@
     },
     "permissions": [
       "contextMenus",
+      "tabs",
       "storage"
     ],
     "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
