@@ -1,7 +1,15 @@
+//var userScore 100;
+//console.log(userScore);
 
-console.log("yooooo");
+//var myObj = {'score': 100};
+
+
+var scoreVal = 100; //initialize score to 100
+
+
 
 chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
+    var tabScore = 0;
     var url = tabs[0].url;
     console.log(url)
 
@@ -9,89 +17,78 @@ chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
 	var split1 = url.split("://");
 	console.log(split1); 
 
-	var parsed_url = split1[1].split("/");
+	var split2 = split1[1].split("/");
+	console.log(split2);
+
+	var parsed_url = split2[0].split(".");
 	console.log(parsed_url);
-});
 
+	//good or bad check
+	var gooddomains = ["stackoverflow", "mail", "slack", "columbia", "edu", "org", "gov", "amazon", "espn", "columbiaspace", "npr", "pbs", "linkedin", "github", "wolframalpha", "docs", "yahoo", "chase", "walmart", "indeed", "accuweather", "yelp"]
+	var baddomains = ["facebook", "twitter", "reddit", "messenger", "netflix", "youtube", "nytimes", "wsj", "washingtonpost", "wikipedia", "medium", "ebay", "instagram", "craigslist", "bing", "pinterest", "foxnews", "cnn", "imdb", "twitch", "blogspot", "whatsapp", "quora"]
+	//google intentionally neutral 
 
-	/*
-	//split string 
-	var split = unitValue.value.split(" ");
-	console.log(split);
+	var siteTag = document.createElement('p');
+	var currSite = "You are on: ";
+	var siteText = document.createTextNode(currSite + split2[0]);
+	siteTag.appendChild(siteText);
+
+	var good;
+	var found = false;
+	for (var i = 0; i < parsed_url.length-1; i++) {
+		for (var k=0; k < gooddomains.length-1; k++) {
+			if (parsed_url[i] == gooddomains[k]) {
+				good = true;
+				found = true;
+				siteTag.style.cssText = "color: green; font-size:22px;";
+				document.body.appendChild(siteTag);
+				tabScore = 1;
+				break;
+			}
+		}
+		for (var a=0; a < baddomains.length-1; a++) {
+			if (parsed_url[i] == baddomains[a]) {
+				good = false;
+				found = true;
+				siteTag.style.cssText = "color: red; font-size:22px;";
+				document.body.appendChild(siteTag);
+				tabScore = -1;
+				break;
+			}
+		}
+	}
 	
-	var numValue = 0;
-	for (var i = 0; i < split.length-1; i++) {
-		if (isNaN(split[i]) == false){
-			console.log(eval(split[i]));
-			numValue += eval(split[i]);
-		}		
+	if (found == false) {
+		siteTag.style.cssText = "font-size:22px;";
+		document.body.appendChild(siteTag);
 	}
-	console.log(numValue);
-	var evalVal = numValue + "";
-	console.log(evalVal);
-	var qty = Qty.parse(evalVal + split[split.length-1]);
+	
+	scoreVal = scoreVal + tabScore;
+    
+    var key = "myKey",
+    score = JSON.stringify({
+        'val': scoreVal
+    });
+	var jsonfile = {};
+    jsonfile[key] = score;
 
-	var unitTag; 
-	var unitText;
-	var unitType = qty.kind();
-	var lengthList = ["meter", "foot", "mile", "inch", "yard", "millimeter", "centimeter", "kilometer"];
-	if (unitType == "length") {
-		var numerator = qty.numerator[0];
-		for (var i=0; i < lengthList.length; i++) {
-			if (numerator != lengthList[i]) {
-				unitTag = document.createElement('p');
-				unitText = document.createTextNode(qty.to(lengthList[i]));
-				unitTag.appendChild(unitText);
-				unitTag.style.cssText = "font-size:22px";
-				document.body.appendChild(unitTag);
-			}
-		}
-	}
-	else if (unitType == "volume") {
-		var numerator = qty.numerator[0];
-		var volumeList = ["cup", "fluid-ounce", "gallon", "liter", "pint", "quart", "tablespoon", "teaspoon", "meter^3", "foot^3", "mile^3", "inch^3", "yard^3", "millimeter^3", "centimeter^3", "kilometer^3"]; 
-		for (var i=0; i < volumeList.length; i++) {
-			if (numerator != volumeList[i]) {
-				unitTag = document.createElement('p');
-				unitText = document.createTextNode(qty.to(volumeList[i]));
-				unitTag.appendChild(unitText);
-				unitTag.style.cssText = "font-size:22px";
-				document.body.appendChild(unitTag);
-			}
-		}
-		for (var i=0; i < lengthList.length; i++) {
-			if (numerator != lengthList[i]) {
-				unitTag = document.createElement('p');
-				unitText = document.createTextNode(qty.to(lengthList[i] + "^3"));
-				unitTag.appendChild(unitText);
-				unitTag.style.cssText = "font-size:22px";
-				document.body.appendChild(unitTag);
-			}
-		}
-	}
-	else if (unitType == "area") {
-		var numerator = qty.numerator[0];
-		var areaList = ["acre", "meter^2", "foot^2", "mile^2", "inch^2", "yard^2", "millimeter^2", "centimeter^2", "kilometer^2"]; 
-		for (var i=0; i < areaList.length; i++) {
-			if (numerator != areaList[i]) {
-				unitTag = document.createElement('p');
-				unitText = document.createTextNode(qty.to(areaList[i]));
-				unitTag.appendChild(unitText);
-				unitTag.style.cssText = "font-size:22px";
-				document.body.appendChild(unitTag);
-			}
-		}
-		for (var i=0; i < lengthList.length; i++) {
-			if (numerator != lengthList[i]) {
-				unitTag = document.createElement('p');
-				unitText = document.createTextNode(qty.to(lengthList[i] + "^2"));
-				unitTag.appendChild(unitText);
-				unitTag.style.cssText = "font-size:22px";
-				document.body.appendChild(unitTag);
-			}
-		}
-	}
-	*/
+    chrome.storage.sync.set(jsonfile, function () {
+        console.log('Saved', key, score);
+    });
+
+    chrome.storage.sync.get(jsonfile[key], function(result) {
+		console.log('Value currently is ' + result);
+		console.log(jsonfile[key]);
+	});
+
+
+	/*chrome.storage.sync.set({key: value}, function() {
+		console.log(value);
+	});
+      
+	chrome.storage.sync.get(['key'], function(result) {
+		console.log('Value currently is ' + result.key);
+	});*/
 });
 
 
