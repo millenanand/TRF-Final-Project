@@ -1,15 +1,9 @@
-//var userScore 100;
-//console.log(userScore);
 
-//var myObj = {'score': 100};
-
-
-var scoreVal = 100; //initialize score to 100
 
 
 
 chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
-    var tabScore = 0;
+
     var url = tabs[0].url;
     console.log(url)
 
@@ -42,7 +36,7 @@ chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
 				found = true;
 				siteTag.style.cssText = "color: green; font-size:22px;";
 				document.body.appendChild(siteTag);
-				tabScore = 1;
+				//tabScore = 1;
 				break;
 			}
 		}
@@ -52,7 +46,7 @@ chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
 				found = true;
 				siteTag.style.cssText = "color: red; font-size:22px;";
 				document.body.appendChild(siteTag);
-				tabScore = -1;
+				//tabScore = -1;
 				break;
 			}
 		}
@@ -63,32 +57,87 @@ chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
 		document.body.appendChild(siteTag);
 	}
 	
-	/*scoreVal = scoreVal + tabScore;
-    
-    var key = "myKey",
-    score = JSON.stringify({
-        'val': scoreVal
-    });
-	var jsonfile = {};
-    jsonfile[key] = score;
+	
 
-    chrome.storage.sync.set(jsonfile, function () {
-        console.log('Saved', key, score);
-    });
+	//Now process history and generate score
 
-    chrome.storage.sync.get(jsonfile[key], function(result) {
-		console.log('Value currently is ' + result);
-		console.log(jsonfile[key]);
-	});*/
+	var past_urls = [];
+	chrome.history.search({text: '', maxResults: 10}, function(data) {
+    	//past_urls = data;
+    	console.log(data);
+    	for (var z=0; z < data.length; z++) {
+    		past_urls[z] = data[z].url;
+    		//data.forEach(function(page) {
+        		//console.log(page.url);
+    		//});
+		}
 
+		console.log(past_urls);
 
-	/*chrome.storage.sync.set({key: value}, function() {
-		console.log(value);
+		var parsed_history = [];
+		console.log("pre for");
+		for (var x=0; x < past_urls.length; x++) {			
+			var split1h = past_urls[x].split("://");
+			//console.log(split1h); 
+
+			var split2h = split1h[1].split("/");
+			//console.log(split2h);
+
+			var parsed_url_h = split2h[0].split(".");
+			//console.log(parsed_url_h);
+
+			parsed_history[x] = parsed_url_h;
+		}
+
+		console.log(parsed_history);
+
+		var score = 100;
+		for(var q = 0; q < parsed_history.length; q++) {
+			for (var i = 0; i < parsed_history[q].length; i++) {
+				for (var k=0; k < gooddomains.length; k++) {
+					if (parsed_history[q][i] == gooddomains[k]) {
+						score = score + 1;
+						break;
+					}
+				}
+				for (var a=0; a < baddomains.length; a++) {
+					if (parsed_history[q][i] == baddomains[a]) {
+						score = score - 1;
+						break;
+					}
+				}
+			}
+		}
+
+		console.log(score);
+		var scoreTag = document.createElement('p');
+		var currScore = "Score: ";
+		var scoreText = document.createTextNode(currScore + score);
+		scoreTag.appendChild(scoreText);
+		if (score > 100)
+			scoreTag.style.cssText = "color: green; font-size:22px;";
+		else if (score < 100)
+			scoreTag.style.cssText = "color: red; font-size:22px;";
+		document.body.appendChild(scoreTag);
 	});
-      
-	chrome.storage.sync.get(['key'], function(result) {
-		console.log('Value currently is ' + result.key);
+
+
+	/*var score;
+	chrome.storage.sync.get('myScore', function(data) {
+    	alert(data.myScore);
+    	score = data.myScore;
+	});
+
+	score = score + tabScore;
+	alert(tabScore); //1, then 101, then new score, then 101
+	chrome.storage.sync.set({'myScore': score}, function() {
+    	alert('New Score');
+	});
+
+	chrome.storage.sync.get('myScore', function(data) {
+    	alert(data.myScore);
 	});*/
+
 });
 
 
