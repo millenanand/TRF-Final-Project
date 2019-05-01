@@ -17,10 +17,35 @@ function onWindowLoad() {
   console.log(message)
   console.log('did we make it this far')
 
+  var score = 100;
+  chrome.storage.sync.set({'myScore': score}, function() {
+  	alert('Success');
+  });
+
 
 }
 
-window.onload = onWindowLoad;
+//window.onload = onWindowLoad;
+/*window.onload = function () {
+	var score = 100;
+  	chrome.storage.sync.set({'myScore': score}, function() {
+  		alert('Success');
+  	});
+}*/
+
+
+
+chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
+  console.log("in fn");
+  if (changeInfo.status == 'complete' && tab.active) {
+
+    var score = 100;
+  	chrome.storage.sync.set({'myScore': score}, function() {
+  		alert('Success');
+  	});
+
+  }
+});
 
 // chrome.runtime.getBackgroundPage(function(backgroundPage) {
 // 	console.log(window);

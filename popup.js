@@ -63,7 +63,7 @@ chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
 		document.body.appendChild(siteTag);
 	}
 	
-	scoreVal = scoreVal + tabScore;
+	/*scoreVal = scoreVal + tabScore;
     
     var key = "myKey",
     score = JSON.stringify({
@@ -79,7 +79,7 @@ chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
     chrome.storage.sync.get(jsonfile[key], function(result) {
 		console.log('Value currently is ' + result);
 		console.log(jsonfile[key]);
-	});
+	});*/
 
 
 	/*chrome.storage.sync.set({key: value}, function() {
