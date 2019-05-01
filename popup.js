@@ -57,12 +57,11 @@ chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
 		document.body.appendChild(siteTag);
 	}
 	
-	
 
 	//Now process history and generate score
 
 	var past_urls = [];
-	chrome.history.search({text: '', maxResults: 10}, function(data) {
+	chrome.history.search({text: '', maxResults: 50}, function(data) {
     	//past_urls = data;
     	console.log(data);
     	for (var z=0; z < data.length; z++) {
