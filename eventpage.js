@@ -6,13 +6,13 @@ var contextMenuItem = {
 	"contexts": ["selection"],
 };
 
-chrome.contextMenus.create(contextMenuItem);
+//chrome.contextMenus.create(contextMenuItem);
 
 
-chrome.contextMenus.onClicked.addListener(function(clickData) {
+/*chrome.contextMenus.onClicked.addListener(function(clickData) {
 	if (clickData.menuItemId == "unit" && clickData.selectionText) {
 
 		console.log('we in')
 
 	}
-})
+})*/
