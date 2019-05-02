@@ -13,7 +13,7 @@ chrome.runtime.onInstalled.addListener(function(details){
 
 
 
-//need to use chrome.runtime to get tab in content script?
+//need to use chrome.runtime to get tab in content script
 //would have to use messaging to send to background, get the tab, send it back
 
 
@@ -29,16 +29,3 @@ chrome.storage.sync.get('myScore', function(data) {
     alert(data.myScore);
 });
 */
-
-function setScore() {
-
-    var score = 100;
-    chrome.storage.sync.set({'myScore': score}, function() {
-        alert('Success');
-    });
-
-    chrome.storage.sync.get('myScore', function(data) {
-        alert(data.myScore);
-    });
-    
-}

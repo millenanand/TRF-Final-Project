@@ -1,7 +1,4 @@
 
-
-
-
 chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
 
     var url = tabs[0].url;
@@ -61,14 +58,11 @@ chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
 	//Now process history and generate score
 
 	var past_urls = [];
-	chrome.history.search({text: '', maxResults: 50}, function(data) {
+	chrome.history.search({text: '', maxResults: 100}, function(data) {
     	//past_urls = data;
     	console.log(data);
     	for (var z=0; z < data.length; z++) {
     		past_urls[z] = data[z].url;
-    		//data.forEach(function(page) {
-        		//console.log(page.url);
-    		//});
 		}
 
 		console.log(past_urls);
@@ -77,13 +71,10 @@ chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
 		console.log("pre for");
 		for (var x=0; x < past_urls.length; x++) {			
 			var split1h = past_urls[x].split("://");
-			//console.log(split1h); 
 
 			var split2h = split1h[1].split("/");
-			//console.log(split2h);
 
 			var parsed_url_h = split2h[0].split(".");
-			//console.log(parsed_url_h);
 
 			parsed_history[x] = parsed_url_h;
 		}
